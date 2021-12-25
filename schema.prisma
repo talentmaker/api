@@ -1,0 +1,115 @@
+datasource db {
+  url      = env("DB_URL")
+  provider = "mysql"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "./.prisma"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
+  // RHEL OpenSSL 1.0.x for Amazon Linux
+  binaryTargets   = ["native", "rhel-openssl-1.0.x"]
+}
+
+model Competition {
+  id             Int       @id @default(autoincrement()) @db.UnsignedInt
+  name           String?   @db.VarChar(64)
+  desc           String?   @db.Text
+  videoURL       String?   @db.VarChar(256)
+  deadline       DateTime? @default(now()) @db.Timestamp(0)
+  website        String?   @db.VarChar(256)
+  email          String?   @db.VarChar(128)
+  organizationId String    @db.Char(36)
+  coverImageURL  String?   @db.VarChar(256)
+  shortDesc      String    @db.VarChar(128)
+  topics         String?   @db.VarChar(128)
+
+  organization Organization  @relation(fields: [organizationId], references: [uid])
+  participants Participant[]
+  projects     Project[]
+
+  @@fulltext([name, shortDesc])
+  @@map("competition")
+}
+
+model Organization {
+  uid String @id @db.Char(36)
+
+  competitions Competition[]
+  user         User          @relation(fields: [uid], references: [uid])
+
+  @@map("organization")
+}
+
+model OrganizationRequest {
+  uid         String   @id @db.Char(36)
+  lastRequest DateTime @default(now()) @db.Timestamp(0)
+
+  user User @relation(fields: [uid], references: [uid])
+
+  @@map("organizationRequests")
+}
+
+model Participant {
+  uid           String  @db.Char(36)
+  role          String? @db.VarChar(32)
+  desc          String? @db.VarChar(256)
+  competitionId Int     @db.UnsignedInt
+  projectId     Int?    @db.UnsignedInt
+
+  competition  Competition @relation(fields: [competitionId], references: [id])
+  project      Project?    @relation(fields: [projectId], references: [id])
+  ownedProject Project?    @relation(name: "teamOwner")
+  user         User        @relation(fields: [uid], references: [uid])
+
+  @@id([uid, competitionId], name: "id")
+  @@index([competitionId], name: "competitionId")
+  @@index([projectId], name: "projectId")
+  @@map("participant")
+}
+
+model Project {
+  id            Int      @id @default(autoincrement()) @db.UnsignedInt
+  creatorId     String   @db.Char(36)
+  createdAt     DateTime @default(now()) @db.Timestamp(0)
+  desc          String?  @db.Text
+  srcURL        String?  @db.VarChar(256)
+  demoURL       String?  @db.VarChar(256)
+  license       String?  @db.Text
+  videoURL      String?  @db.VarChar(256)
+  coverImageURL String?  @db.VarChar(256)
+  competitionId Int      @db.UnsignedInt
+  name          String?  @db.VarChar(64)
+  topics        String?  @db.VarChar(128)
+
+  teamMembers Participant[]
+  teamOwner   Participant   @relation(fields: [creatorId, competitionId], references: [uid, competitionId], name: "teamOwner")
+  competition Competition   @relation(fields: [competitionId], references: [id])
+  creatorUser User          @relation(fields: [creatorId], references: [uid])
+
+  @@unique([creatorId, competitionId], name: "creatorProject")
+  @@index([competitionId], name: "competitionId")
+  @@fulltext([name])
+  @@map("project")
+}
+
+model User {
+  uid        String   @id @unique @db.Char(36)
+  email      String   @unique @db.VarChar(256)
+  username   String   @db.VarChar(32)
+  theme      Theme    @default(Light)
+  lastActive DateTime @default(now()) @db.Timestamp(0)
+
+  organization        Organization?
+  organizationRequest OrganizationRequest?
+  participating       Participant[]
+  projects            Project[]
+
+  @@fulltext([username])
+  @@map("user")
+}
+
+enum Theme {
+  Light
+  Dark
+}

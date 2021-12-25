@@ -1,0 +1,25 @@
+#!/bin/sh
+__dirname=$(dirname "$0")
+
+# NOTE: unlike dotenv, env variables will overwrite one another
+
+# shellcheck disable=2046
+export $(grep -Ev '^#' "${__dirname}"/../.env.example | xargs)
+# shellcheck disable=2046
+export $(grep -Ev '^#' "${__dirname}"/../.env.testing | xargs)
+
+# Failsafe so I don't wipe the production database again
+if [ -z "$DB_URL" ]; then
+    echo "ERROR: refusing to test without DB_URL defined in .env.testing"
+    exit 1
+else
+    echo "Running test on $DB_URL"
+fi
+
+PS4='\033[0;32m > \033[0m'
+set -o xtrace -e
+
+yarn prisma migrate reset --force --skip-generate
+
+node --experimental-specifier-resolution=node --experimental-vm-modules \
+    "${__dirname}/../node_modules/jest/bin/jest.js" --config "${__dirname}/../jest.config.js" "$@"

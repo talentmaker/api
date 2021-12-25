@@ -1,0 +1,9 @@
+#!/bin/node
+
+const fs = require("fs")
+
+const code = fs.readFileSync(`${__dirname}/../.prisma/index.js`, "utf-8")
+
+const fixedCode = code.replace(/"",/u, "")
+
+fs.writeFileSync(`${__dirname}/../.prisma/index.js`, fixedCode)

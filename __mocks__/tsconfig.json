@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    "declarationDir": null,
+    "declaration": false,
+    "tsBuildInfoFile": "./tsBuildInfo",
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "sourceMap": false,
+    "noUncheckedIndexedAccess": true,
+  },
+  "include": [
+    "./src/",
+  ],
+}

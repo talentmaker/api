@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `competition` MODIFY `deadline` TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP(0);

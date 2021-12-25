@@ -1,0 +1,9 @@
+#!/bin/sh
+
+__dirname=$(dirname "$0")
+rootDir="${__dirname}/.."
+bin="${rootDir}/node_modules/.bin"
+prismaEngine="rhel-openssl-1.0.x"
+
+PS4='\033[0;32m > \033[0m'
+set -o xtrace -e

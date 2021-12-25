@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `organizationRequests` MODIFY `lastRequest` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0);
+
+-- AlterTable
+ALTER TABLE `project` MODIFY `createdAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0);

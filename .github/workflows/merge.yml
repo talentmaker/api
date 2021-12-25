@@ -1,0 +1,28 @@
+name: Merge Schedule
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+    branches:
+      - master
+  schedule:
+    # Merge at 3am. Hopefully no one's on.
+    # This merge will be synchronized with the frontend.
+    - cron: 0 3 * * *
+
+jobs:
+  merge_schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: gr2m/merge-schedule-action@v1
+        with:
+          # Merge method to use. Possible values are merge, squash or rebase. Default is merge.
+          merge_method: merge
+
+          #  Time zone to use. Default is UTC.
+          time_zone: "America/Toronto"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

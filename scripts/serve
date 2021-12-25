@@ -1,0 +1,75 @@
+#!/bin/node
+
+const chalk = require("chalk")
+const {app} = require("..")
+
+/**
+ * @param {number} value
+ */
+const fillZero = (value) => (value < 10 ? `0${value}` : value.toString())
+
+const getFormattedTime = () => {
+    const date = new Date()
+
+    return `${date.getHours() % 12}:${fillZero(date.getMinutes())}:${fillZero(
+        date.getSeconds(),
+    )} ${date.getHours() >= 12 ? "PM" : "AM"}`
+}
+
+const isUsableRoute = (route) =>
+    route.route && route.route.path && !/\/?static/.test(route.route.path)
+
+const defaultPort = 3333
+const port =
+    process.env.PORT !== undefined && process.env.PORT !== "default"
+        ? Number(process.env.PORT)
+        : defaultPort
+
+// Default to development env if none given
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = "development"
+}
+
+app.listen(port, () => {
+    /**
+     * @type {string[]}
+     */
+    const routes = []
+
+    const longestMethod = Math.max(
+        ...app._router.stack
+            .map((route) =>
+                isUsableRoute(route) ? route.route.stack[0].method.length : undefined,
+            )
+            .filter((val) => val !== undefined),
+    )
+
+    const longestRoute = Math.max(
+        ...app._router.stack
+            .map((route) => (isUsableRoute(route) ? route.route.path.length : undefined))
+            .filter((val) => val !== undefined),
+    )
+
+    app._router.stack.forEach((route) => {
+        if (isUsableRoute(route)) {
+            const stack = route.route.stack[0]
+
+            routes.push(
+                `${" ".repeat(4)}${chalk.cyan.bold(stack.method.toUpperCase())}${" ".repeat(
+                    longestMethod - stack.method.length,
+                )} ${chalk.green(route.route.path)}${" ".repeat(
+                    longestRoute - route.route.path.length,
+                )} ${chalk.white(stack.name)}`,
+            )
+        }
+    })
+
+    console.log(`${getFormattedTime()} - ${chalk.green("Started server...")}`)
+    console.log()
+    console.log(chalk.green.bold("Routes:"))
+    routes.forEach((route) => {
+        console.log(route)
+    })
+
+    console.log(`\n${chalk.whiteBright.bold("App listening on")} ${chalk.blue.bold(port)}!\n\n`)
+})

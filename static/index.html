@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talentmaker API</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+      * {
+        margin: 0 auto;
+        text-align: left;
+      }
+
+      body {
+        background-color: #272727;
+      }
+
+      .cont_principal {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .cont_error {
+        position: absolute;
+        width: 80%;
+        height: 300px;
+        top: 20%;
+        margin-top: -150px;
+        margin-left: 10vw;
+      }
+
+      .cont_error > h1 {
+        font-family: "Roboto", "Lato", sans-serif;
+        font-weight: 400;
+        font-size: 150px;
+        color: #f4f4f4;
+        position: relative;
+        left: -100%;
+        transition: all 0.5s;
+      }
+
+      .cont_error > p {
+        font-family: "Roboto", "Lato", sans-serif;
+        font-weight: 300;
+        font-size: 15px;
+        color: #9294ae;
+        position: relative;
+        left: 120%;
+        transition: all 0.5s;
+        transition-delay: 0.5s;
+        -webkit-transition: all 0.5s;
+        -webkit-transition-delay: 0.5s;
+      }
+
+      .cont_aura_1 {
+        position: absolute;
+        width: 300px;
+        height: 120%;
+        top: 25px;
+        right: -340px;
+        background-color: #657bdf;
+        box-shadow: 0 0 60px 20px rgba(100, 108, 222, 0.5);
+        -webkit-transition: all 0.5s;
+        transition: all 0.5s;
+      }
+
+      .cont_aura_2 {
+        position: absolute;
+        width: 100%;
+        height: 300px;
+        right: -10%;
+        bottom: -301px;
+        background-color: #657bdf;
+        box-shadow: 0 0 60px 10px rgba(95, 103, 214, 0.5), 0 0 20px 0 rgba(0, 0, 0, 0.1);
+        z-index: 5;
+        transition: all 0.5s;
+        -webkit-transition: all 0.5s;
+      }
+
+      .cont_error_active > .cont_error > h1 {
+        left: 0%;
+      }
+
+      .cont_error_active > .cont_error > p {
+        left: 0%;
+      }
+
+      .cont_error_active > .cont_aura_2 {
+        animation-name: animation_error_2;
+        animation-duration: 4s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        transform: rotate(-20deg);
+      }
+
+      .cont_error_active > .cont_aura_1 {
+        transform: rotate(20deg);
+        right: -170px;
+        animation-name: animation_error_1;
+        animation-duration: 4s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+      }
+
+      @-webkit-keyframes animation_error_1 {
+        from {
+          -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+        }
+
+        to {
+          -webkit-transform: rotate(25deg);
+          transform: rotate(25deg);
+        }
+      }
+
+      @-o-keyframes animation_error_1 {
+        from {
+          -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+        }
+
+        to {
+          -webkit-transform: rotate(25deg);
+          transform: rotate(25deg);
+        }
+      }
+
+      @-moz-keyframes animation_error_1 {
+        from {
+          -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+        }
+
+        to {
+          -webkit-transform: rotate(25deg);
+          transform: rotate(25deg);
+        }
+      }
+
+      @keyframes animation_error_1 {
+        from {
+          -webkit-transform: rotate(20deg);
+          transform: rotate(20deg);
+        }
+
+        to {
+          -webkit-transform: rotate(25deg);
+          transform: rotate(25deg);
+        }
+      }
+
+      @-webkit-keyframes animation_error_2 {
+        from {
+          -webkit-transform: rotate(-15deg);
+          transform: rotate(-15deg);
+        }
+
+        to {
+          -webkit-transform: rotate(-20deg);
+          transform: rotate(-20deg);
+        }
+      }
+
+      @-o-keyframes animation_error_2 {
+        from {
+          -webkit-transform: rotate(-15deg);
+          transform: rotate(-15deg);
+        }
+
+        to {
+          -webkit-transform: rotate(-20deg);
+          transform: rotate(-20deg);
+        }
+      }
+
+      @-moz-keyframes animation_error_2 {
+        from {
+          -webkit-transform: rotate(-15deg);
+          transform: rotate(-15deg);
+        }
+
+        to {
+          -webkit-transform: rotate(-20deg);
+          transform: rotate(-20deg);
+        }
+      }
+
+      @keyframes animation_error_2 {
+        from {
+          -webkit-transform: rotate(-15deg);
+          transform: rotate(-15deg);
+        }
+
+        to {
+          -webkit-transform: rotate(-20deg);
+          transform: rotate(-20deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cont_principal">
+      <div class="cont_error">
+        <h1>Talentmaker</h1>
+        <p>
+          Welcome to the Talentmaker API, programmed by
+          <a href="https://luke-zhang-04.github.io/">Luke Zhang</a>.
+        </p>
+        <br />
+
+        <div>
+          <p>
+            Copyright (C) 2020 - 2021 <a href="https://luke-zhang-04.github.io/">Luke Zhang</a>
+          </p>
+          <br />
+
+          <p>
+            Redistribution and use in source and binary forms, with or without modification, are
+            permitted provided that the following conditions are met:
+          </p>
+          <br />
+
+          <ol>
+            <li>
+              Redistributions of source code must retain the above copyright notice, this list of
+              conditions and the following disclaimer.
+            </li>
+            <br />
+            <li>
+              Redistributions in binary form must reproduce the above copyright notice, this list
+              of conditions and the following disclaimer in the documentation and/or other
+              materials provided with the distribution.
+            </li>
+            <br />
+            <li>
+              Neither the name of the copyright holder nor the names of its contributors may be
+              used to endorse or promote products derived from this software without specific prior
+              written permission.
+            </li>
+          </ol>
+          <br />
+
+          <p>
+            THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+            EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+            MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+            THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+            SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+            PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+            INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+            STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+            THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+          </p>
+        </div>
+      </div>
+      <div class="cont_aura_1"></div>
+      <div class="cont_aura_2"></div>
+    </div>
+  </body>
+  <script src="./static/js/applyClassName.js"></script>
+</html>

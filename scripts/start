@@ -1,0 +1,194 @@
+#!/bin/node
+
+/**
+ * @file combination Of tsc watch, restarting the app, and eslint together
+ */
+
+const shouldUseEslint = process.env.DISABLE_ESLINT !== "true"
+
+const ESLint = shouldUseEslint ? require("eslint").ESLint : undefined
+const TscWatchClient = require("tsc-watch/client")
+const chalk = require("chalk")
+const path = require("path")
+const readline = require("readline")
+
+const defaultPort = 3333
+const port =
+    process.env.PORT !== undefined && process.env.PORT !== "default"
+        ? Number(process.env.PORT)
+        : defaultPort
+
+// Default to development env if none given
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = "development"
+}
+
+const watch = new TscWatchClient()
+const eslint = shouldUseEslint
+    ? new ESLint({fix: true, cache: true, extensions: ["ts", "tsx", "js", "jsx"]})
+    : undefined
+
+/**
+ * @param {number} value
+ */
+const fillZero = (value) => (value < 10 ? `0${value}` : value.toString())
+
+const isUsableRoute = (route) =>
+    route.route && route.route.path && !/\/?static/.test(route.route.path)
+
+const getFormattedTime = () => {
+    const date = new Date()
+
+    return `${date.getHours() % 12}:${fillZero(date.getMinutes())}:${fillZero(
+        date.getSeconds(),
+    )} ${date.getHours() >= 12 ? "PM" : "AM"}`
+}
+
+const runEslint = async () => {
+    if (!eslint) {
+        throw new Error("Eslint was never instantiated")
+    }
+
+    console.log(`${getFormattedTime()} - ${chalk.blue("Running linter...")}`)
+
+    const results = await eslint.lintFiles([`${__dirname}/../src`])
+
+    await ESLint.outputFixes(results)
+
+    const formatter = await eslint.loadFormatter("stylish")
+    const resultText = formatter.format(results)
+
+    console.log(resultText || `${getFormattedTime()} - ${chalk.green("No lint errors")}`)
+}
+
+const shutdown = () => {
+    try {
+        console.log(`\n${getFormattedTime()} - ${chalk.yellow("Gracefully shutting down...")}`)
+        watch.kill()
+        appListener?.close()
+        rl.close()
+    } catch (err) {
+        console.error(`\n${getFormattedTime()} - ${chalk.red(`ERROR: ${err}`)}`)
+
+        process.exit(1)
+    }
+}
+
+/**
+ * The HTTP Server instance from app.listen
+ *
+ * @type {import("http").Server | undefined}
+ */
+let appListener
+
+const restartApp = async () => {
+    console.log(`${getFormattedTime()} - ${chalk.yellow("Starting server...")}`)
+
+    // Since app was recompiled, it should be deleted from the cache
+    const appCacheKeys = Array.from(Object.keys(require.cache)).filter((modulePath) =>
+        modulePath.startsWith(path.resolve(`${__dirname}/../lib`)),
+    )
+
+    for (const key of appCacheKeys) {
+        delete require.cache[key]
+    }
+
+    /**
+     * @type {import("express").Application}
+     */
+    const app = require("../lib").default
+
+    appListener?.close()
+
+    await new Promise((resolve) => {
+        appListener = app.listen(port, () => {
+            /**
+             * @type {string[]}
+             */
+            const routes = []
+
+            const longestMethod = Math.max(
+                ...app._router.stack
+                    .map((route) =>
+                        isUsableRoute(route) ? route.route.stack[0].method.length : undefined,
+                    )
+                    .filter((val) => val !== undefined),
+            )
+
+            const longestRoute = Math.max(
+                ...app._router.stack
+                    .map((route) => (isUsableRoute(route) ? route.route.path.length : undefined))
+                    .filter((val) => val !== undefined),
+            )
+
+            app._router.stack.forEach((route) => {
+                if (isUsableRoute(route)) {
+                    const stack = route.route.stack[0]
+
+                    routes.push(
+                        `${" ".repeat(4)}${chalk.cyan.bold(
+                            stack.method.toUpperCase(),
+                        )}${" ".repeat(longestMethod - stack.method.length)} ${chalk.green(
+                            route.route.path,
+                        )}${" ".repeat(longestRoute - route.route.path.length)} ${chalk.white(
+                            stack.name,
+                        )}`,
+                    )
+                }
+            })
+
+            console.log(`${getFormattedTime()} - ${chalk.green("Started server...")}`)
+            console.log()
+            console.log(chalk.green.bold("Routes:"))
+            routes.forEach((route) => {
+                console.log(route)
+            })
+
+            console.log(
+                `\n${chalk.whiteBright.bold("App listening on")} ${chalk.blue.bold(port)}!\n\n`,
+            )
+
+            return resolve()
+        })
+    })
+}
+
+watch.on("success", () => {
+    restartApp()
+
+    if (shouldUseEslint) {
+        runEslint()
+    }
+})
+
+watch.start("--project", ".")
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false,
+})
+
+rl.on("SIGINT", shutdown)
+
+rl.on("line", (line) => {
+    if (line === "rs") {
+        console.log(`\n${getFormattedTime()} - ${chalk.blue("Restarting server...")}`)
+        restartApp()
+    } else if (line === "rc") {
+        console.log(`\n${getFormattedTime()} - ${chalk.blue("Force restarting...")}`)
+
+        for (const key of Object.keys(require.cache)) {
+            delete require.cache[key]
+        }
+
+        watch.kill()
+        watch.start("--project", ".")
+    } else if (line === "ex" || line === "exit") {
+        rl.emit("SIGINT")
+    }
+})
+
+process.on("SIGINT", () => {
+    rl.emit("SIGINT")
+})

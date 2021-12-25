@@ -1,0 +1,21 @@
+{
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "[shellscript]": {
+        "files.eol": "\n",
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "editor.formatOnSave": true,
+    "typescript.tsserver.experimental.enableProjectDiagnostics": false,
+    "[sql]": {
+        "editor.formatOnSave": false,
+    },
+}
