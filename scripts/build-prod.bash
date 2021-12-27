@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 __dirname=$(dirname "$0")
 rootDir="${__dirname}/.."
@@ -11,6 +11,7 @@ set -o xtrace -e
 "$bin/tsc" --project "$rootDir" --outDir "${rootDir}/build/lib" --incremental false --tsBuildInfoFile null
 
 "$bin/prisma" generate
+"${rootDir}/scripts/fix-prisma"
 
 cp -rv \
     "${rootDir}/package.json" \

@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsc",
     "build:all": "yarn workspaces run build; yarn build",
-    "build:prod": "sh scripts/build-prod.sh",
+    "build:prod": "bash scripts/build-prod.bash",
     "deploy": "serverless deploy function -f main",
     "dev": "bash -c \"./development\"",
     "dev:no-tsc": "bash -c \"./development --no-tsc\"",
