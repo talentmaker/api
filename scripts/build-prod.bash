@@ -8,10 +8,10 @@ prismaEngine="rhel-openssl-1.0.x"
 PS4='\033[0;32m > \033[0m'
 set -o xtrace -e
 
-"$bin/tsc" --project "$rootDir" --outDir "${rootDir}/build/lib" --incremental false --tsBuildInfoFile null
-
 "$bin/prisma" generate
 "${rootDir}/scripts/fix-prisma"
+
+"$bin/tsc" --project "$rootDir" --outDir "${rootDir}/build/lib" --incremental false --tsBuildInfoFile null
 
 cp -rv \
     "${rootDir}/package.json" \
