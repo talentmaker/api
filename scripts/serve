@@ -30,7 +30,7 @@ if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = "development"
 }
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     /**
      * @type {string[]}
      */
@@ -73,3 +73,7 @@ app.listen(port, () => {
 
     console.log(`\n${chalk.whiteBright.bold("App listening on")} ${chalk.blue.bold(port)}!\n\n`)
 })
+
+process.on("exit", () => server.close())
+process.on("beforeExit", () => server.close())
+process.on("SIGINT", () => server.close())
