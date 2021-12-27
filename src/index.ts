@@ -14,11 +14,6 @@ import morgan from "morgan"
 import path from "path"
 import ratelimit from "express-rate-limit"
 
-// istanbul ignore next
-const serverless: typeof import("serverless-http") | undefined = isProduction
-    ? require("serverless-http")
-    : undefined
-
 export const app = express()
 
 // istanbul ignore next
@@ -177,7 +172,5 @@ app.get("/static/js/applyClassName.js", (_, response) =>
 app.use((_, response) =>
     response.status(Status.NotFound).sendFile(path.resolve(__dirname, "../static/404.html")),
 )
-
-export const handler = serverless?.(app)
 
 export default app

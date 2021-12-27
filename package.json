@@ -21,7 +21,6 @@
     "build": "tsc",
     "build:all": "yarn workspaces run build; yarn build",
     "build:prod": "bash scripts/build-prod.bash",
-    "deploy": "serverless deploy function -f main",
     "dev": "bash -c \"./development\"",
     "dev:no-tsc": "bash -c \"./development --no-tsc\"",
     "format": "prettier . --write && eslint src --ext ts,js,tsx,jsx --max-warnings=0 --cache --fix",
@@ -61,7 +60,6 @@
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.1",
     "re2": "^1.16.0",
-    "serverless-http": "^2.7.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {
@@ -97,7 +95,6 @@
     "prettier-plugin-prisma": "^3.6.0",
     "prettier-plugin-sh": "^0.7.1",
     "prisma": "^3.6.0",
-    "serverless": "~2.51.2",
     "tsc-watch": "^4.4.0",
     "typescript": "^4.4.2"
   },

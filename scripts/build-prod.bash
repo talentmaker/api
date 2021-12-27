@@ -15,7 +15,6 @@ set -o xtrace -e
 
 cp -rv \
     "${rootDir}/package.json" \
-    "${rootDir}/serverless.yml" \
     "${rootDir}/index.js" \
     "${rootDir}/.env.gpg" \
     "${rootDir}/yarn.lock" \
