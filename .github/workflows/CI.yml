@@ -27,19 +27,19 @@ jobs:
           mysql root password: ci_password
 
       - name: Install deps
-        run: yarn install --frozen-lockfile
+        run: pnpm install
 
       - name: ESLint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Audit
-        run: yarn audit --groups dependencies
+        run: pnpm audit -P
 
       - name: Generate prisma client
-        run: yarn prismaGenerate
+        run: pnpm prismaGenerate
 
       - name: Compile
-        run: yarn workspaces run build && yarn build
+        run: pnpm build -r
 
       - name: Wait for MySQL
         run: |
@@ -51,4 +51,4 @@ jobs:
         run: echo "DB_URL="mysql://root:ci_password@localhost:3306/test"" > .env.testing
 
       - name: Run tests
-        run: ERROR_LOG=1 yarn test
+        run: ERROR_LOG=1 pnpm test

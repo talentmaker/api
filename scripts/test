@@ -19,7 +19,7 @@ fi
 PS4='\033[0;32m > \033[0m'
 set -o xtrace -e
 
-yarn prisma migrate reset --force --skip-generate
+pnpm prisma migrate reset --force --skip-generate
 
 node --experimental-specifier-resolution=node --experimental-vm-modules \
     "${__dirname}/../node_modules/jest/bin/jest.js" --config "${__dirname}/../jest.config.js" "$@"

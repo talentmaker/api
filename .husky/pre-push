@@ -6,4 +6,4 @@ __dirname=$(dirname "$0")
 
 # bin="${__dirname}/../node_modules/.bin"
 
-yarn audit --groups dependencies
+pnpm audit -P

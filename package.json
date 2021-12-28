@@ -19,7 +19,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:all": "yarn workspaces run build; yarn build",
     "build:prod": "bash scripts/build-prod.bash",
     "dev": "bash -c \"./development\"",
     "dev:no-tsc": "bash -c \"./development --no-tsc\"",

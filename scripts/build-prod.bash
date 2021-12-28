@@ -17,7 +17,7 @@ cp -rv \
     "${rootDir}/package.json" \
     "${rootDir}/index.js" \
     "${rootDir}/.env.gpg" \
-    "${rootDir}/yarn.lock" \
+    "${rootDir}/pnpm-lock.yaml" \
     "${rootDir}/static" \
     "${rootDir}/build"
 
