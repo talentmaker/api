@@ -24,8 +24,6 @@ if [ -f "${rootDir}/.env" ]; then
     cp -v "${rootDir}/.env" "${rootDir}/build"
 fi
 
-mkdir -pv "${rootDir}/build/.prisma/runtime"
-
 cp -rf "${rootDir}/.prisma" "${rootDir}/build/.prisma"
 
 cp -v "${rootDir}/.prisma/runtime/index.js" "${rootDir}/build/.prisma/runtime"
