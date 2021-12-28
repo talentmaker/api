@@ -32,7 +32,7 @@
         margin-left: 10vw;
       }
 
-      .cont_error > h1 {
+      .cont_error h1 {
         font-family: "Roboto", "Lato", sans-serif;
         font-weight: 400;
         font-size: 150px;
@@ -42,7 +42,18 @@
         transition: all 0.5s;
       }
 
-      .cont_error > p {
+      .cont_error h2 {
+        font-family: "Roboto", "Lato", sans-serif;
+        font-weight: 400;
+        font-size: 50px;
+        color: #f4f4f4;
+        position: relative;
+        left: -100%;
+        transition: all 0.5s;
+      }
+
+      .cont_error p,
+      .cont_error li {
         font-family: "Roboto", "Lato", sans-serif;
         font-weight: 300;
         font-size: 15px;
@@ -80,15 +91,14 @@
         -webkit-transition: all 0.5s;
       }
 
-      .cont_error_active > .cont_error > h1 {
+      .cont_error_active .cont_error p,
+      .cont_error_active .cont_error li,
+      .cont_error_active .cont_error h1,
+      .cont_error_active .cont_error h2 {
         left: 0%;
       }
 
-      .cont_error_active > .cont_error > p {
-        left: 0%;
-      }
-
-      .cont_error_active > .cont_aura_2 {
+      .cont_error_active .cont_aura_2 {
         animation-name: animation_error_2;
         animation-duration: 4s;
         animation-timing-function: linear;
@@ -97,7 +107,7 @@
         transform: rotate(-20deg);
       }
 
-      .cont_error_active > .cont_aura_1 {
+      .cont_error_active .cont_aura_1 {
         transform: rotate(20deg);
         right: -170px;
         animation-name: animation_error_1;
@@ -257,6 +267,16 @@
             STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
             THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           </p>
+        </div>
+
+        <div>
+          <br />
+          <h2>API Access</h2>
+          <p
+            >Cross origin resource sharing (CORS) has been disabled, meaning only
+            <a href="https://talentmaker.ca">talentmaker.ca</a> can use this API. If you for some
+            reason want to use this API, please contact us.</p
+          >
         </div>
       </div>
       <div class="cont_aura_1"></div>
