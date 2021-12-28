@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 __dirname=$(dirname "$0")
 
 # NOTE: unlike dotenv, env variables will overwrite one another

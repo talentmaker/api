@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 __dirname=$(dirname "$0")
 rootDir="${__dirname}/.."
