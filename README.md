@@ -2,7 +2,7 @@
 
 API for [Talentmaker](https://talentmaker.ca))
 
-API URL: [https://g5a50u6z60.execute-api.us-east-1.amazonaws.com/prod](https://g5a50u6z60.execute-api.us-east-1.amazonaws.com/prod)
+API URL: [https://api.talentmaker.ca](https://api.talentmaker.ca)
 
 [Frontend](https://github.com/talentmaker/site)
 

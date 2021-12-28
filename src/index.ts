@@ -18,12 +18,9 @@ export const app = express()
 
 // istanbul ignore next
 // Allowed origins for CORS
+// NOTE: CORS has been disabled for production
 const origin = isProduction
-    ? [
-          "https://talentmaker.ca",
-          "https://www.talentmaker.ca",
-          "https://master.d39yq4lhxi3pyb.amplifyapp.com",
-      ]
+    ? ["https://talentmaker.ca", "https://www.talentmaker.ca"]
     : [
           "http://localhost:3000",
           "http://127.0.0.1:3000",
@@ -32,11 +29,16 @@ const origin = isProduction
       ]
 
 app.use(
-    cors({
-        origin,
-        optionsSuccessStatus: Status.Ok,
-        credentials: true,
-    }),
+    // Disable CORS for production
+    ...(isProduction
+        ? []
+        : [
+              cors({
+                  origin,
+                  optionsSuccessStatus: Status.Ok,
+                  credentials: true,
+              }),
+          ]),
     express.json(),
     helmet(),
     ratelimit({
