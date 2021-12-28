@@ -1,6 +1,6 @@
 # Talentmaker API
 
-API for [Talentmaker](https://talentmaker.ca))
+API for [Talentmaker](https://talentmaker.ca)
 
 API URL: [https://api.talentmaker.ca](https://api.talentmaker.ca)
 
