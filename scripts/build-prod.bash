@@ -3,7 +3,6 @@
 __dirname=$(dirname "$0")
 rootDir="${__dirname}/.."
 bin="${rootDir}/node_modules/.bin"
-prismaEngine="rhel-openssl-1.0.x"
 
 PS4='\033[0;32m > \033[0m'
 set -o xtrace -e
@@ -27,10 +26,6 @@ fi
 
 mkdir -pv "${rootDir}/build/.prisma/runtime"
 
-cp -v \
-    "${rootDir}/.prisma/libquery_engine-${prismaEngine}.so.node" \
-    "${rootDir}/.prisma/index.js" \
-    "${rootDir}/.prisma/schema.prisma" \
-    "${rootDir}/build/.prisma"
+cp -rf "${rootDir}/.prisma" "${rootDir}/build/.prisma"
 
 cp -v "${rootDir}/.prisma/runtime/index.js" "${rootDir}/build/.prisma/runtime"
