@@ -18,7 +18,6 @@ export const app = express()
 
 // istanbul ignore next
 // Allowed origins for CORS
-// NOTE: CORS has been disabled for production
 const origin = isProduction
     ? ["https://talentmaker.ca", "https://www.talentmaker.ca"]
     : [
@@ -29,16 +28,11 @@ const origin = isProduction
       ]
 
 app.use(
-    // Disable CORS for production
-    ...(isProduction
-        ? []
-        : [
-              cors({
-                  origin,
-                  optionsSuccessStatus: Status.Ok,
-                  credentials: true,
-              }),
-          ]),
+    cors({
+        origin,
+        optionsSuccessStatus: Status.Ok,
+        credentials: true,
+    }),
     express.json(),
     helmet(),
     ratelimit({
