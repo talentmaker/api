@@ -1,9 +1,11 @@
-import {CognitoIdentityProvider} from "@aws-sdk/client-cognito-identity-provider"
-import type {CognitoIdentityProviderClientConfig} from "@aws-sdk/client-cognito-identity-provider"
-import {SES} from "@aws-sdk/client-ses"
-import type {SESClientConfig} from "@aws-sdk/client-ses"
+import {
+    CognitoIdentityProvider,
+    type CognitoIdentityProviderClientConfig,
+} from "@aws-sdk/client-cognito-identity-provider"
+import {LambdaClient, type LambdaClientConfig} from "@aws-sdk/client-lambda"
+import {LambdaSes} from "lambda-ses/cjs"
 
-interface Config extends CognitoIdentityProviderClientConfig, SESClientConfig {}
+interface Config extends CognitoIdentityProviderClientConfig, LambdaClientConfig {}
 
 const config: Config = {
     credentials: {
@@ -15,4 +17,5 @@ const config: Config = {
 }
 
 export const cognito = new CognitoIdentityProvider(config)
-export const ses = new SES(config)
+export const lambda = new LambdaClient(config)
+export const lambdaSes = new LambdaSes(lambda, "lambda-ses")

@@ -70,7 +70,7 @@ describe("Test organizations", () => {
             /**
              * @type {string}
              */
-            const text = body.Message?.Body?.Text?.Data
+            const text = body?.email?.content?.body?.text?.data
 
             expect(text).toContain("would like to be verified as an organization")
 
@@ -88,9 +88,9 @@ describe("Test organizations", () => {
                 })
                 .expect(200)
 
-            url2 = body2.Message?.Body?.Text?.Data.match(
-                /http:\/\/([A-z]|:|[0-9]|\/|\?|=|-|_)*/gu,
-            )[0]?.slice("http://localhost:3333/organization/accept/".length)
+            url2 = body2?.email?.content?.body?.text?.data
+                .match(/http:\/\/([A-z]|:|[0-9]|\/|\?|=|-|_)*/gu)[0]
+                ?.slice("http://localhost:3333/organization/accept/".length)
         })
 
         it("should disallow another request", async () => {
