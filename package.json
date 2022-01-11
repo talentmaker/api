@@ -37,8 +37,7 @@
   "keywords": [],
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.27.0",
-    "@aws-sdk/client-ses": "^3.27.0",
-    "@aws-sdk/node-config-provider": "^3.32.0",
+    "@aws-sdk/client-lambda": "^3.46.0",
     "@luke-zhang-04/dateplus": "^4.0.0-beta1",
     "@luke-zhang-04/utils": "github:luke-zhang-04/utils#semver:^1.7.0",
     "amazon-cognito-identity-js": "^5.0.4",
@@ -54,6 +53,7 @@
     "helmet": "^4.6.0",
     "isomorphic-dompurify": "^0.15.0",
     "jsonwebtoken": "^8.5.1",
+    "lambda-ses": "github:talentmaker/lambda-ses#semver:^1.1.0",
     "mailcheck": "^1.1.1",
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
@@ -64,7 +64,6 @@
   },
   "devDependencies": {
     "@prisma/client": "^3.6.0",
-    "@types/aws-lambda": "^8.10.77",
     "@types/base64-url": "^2.2.0",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",

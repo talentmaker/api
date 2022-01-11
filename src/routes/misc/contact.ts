@@ -1,7 +1,7 @@
 import * as yup from "yup"
 import {checkEmail} from "~/utils"
 import {isProduction} from "~/env"
-import {ses} from "~/aws"
+import {lambdaSes} from "~/aws"
 import statuses from "~/statuses"
 
 // istanbul ignore file
@@ -37,43 +37,55 @@ export const contact: ExpressHandler = async (request, response) => {
 
     const toEmail = isProduction ? "talentmakergroup@gmail.com" : "luke_zhang_04@protonmail.com"
 
-    await ses.sendEmail({
-        Source: body.email,
-        Destination: {
-            ToAddresses: [toEmail],
-        },
-        Message: {
-            Subject: {
-                Charset: "UTF-8",
-                Data: `Message from ${body.name}: ${body.subject}`,
-            },
-            Body: {
-                Text: {
-                    Charset: "UTF-8",
-                    Data: body.message,
+    await lambdaSes.send(
+        {
+            email: {
+                from: "talentmakergroup@gmail.com",
+                dest: {
+                    to: [toEmail],
+                },
+                content: {
+                    subject: {
+                        charset: "UTF-8",
+                        data: `Message from ${body.name} at ${body.email}: ${body.subject}`,
+                    },
+                    body: {
+                        text: {
+                            charset: "UTF-8",
+                            data: `${body.name} | ${body.email}\n\n${body.message}`,
+                        },
+                    },
                 },
             },
         },
-    })
+        {},
+        true,
+    )
 
-    await ses.sendEmail({
-        Source: "talentmakergroup@gmail.com",
-        Destination: {
-            ToAddresses: [body.email],
-        },
-        Message: {
-            Subject: {
-                Charset: "UTF-8",
-                Data: "Thank you for contacting Talentmaker",
-            },
-            Body: {
-                Text: {
-                    Charset: "UTF-8",
-                    Data: `Dear ${body.name},\n\nThank you for contacting Talentmaker. This is an automated message to let you know that the email was sent successfully, and we'll be in touch with you shortly.\n\nRegards,\nThe Talentmaker Group.`,
+    await lambdaSes.send(
+        {
+            email: {
+                from: "talentmakergroup@gmail.com",
+                dest: {
+                    to: [body.email],
+                },
+                content: {
+                    subject: {
+                        charset: "UTF-8",
+                        data: "Thank you for contacting Talentmaker",
+                    },
+                    body: {
+                        text: {
+                            charset: "UTF-8",
+                            data: `Dear ${body.name},\n\nThank you for contacting Talentmaker. This is an automated message to let you know that the email was sent successfully, and we'll be in touch with you shortly.\n\nRegards,\nThe Talentmaker Group.`,
+                        },
+                    },
                 },
             },
         },
-    })
+        {},
+        true,
+    )
 
     return response.status(statuses.NoContent).send()
 }

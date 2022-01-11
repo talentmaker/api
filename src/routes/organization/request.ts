@@ -1,13 +1,13 @@
 import * as yup from "yup"
 import getUser, {ExtendedUserInfo} from "~/jwt"
 import {isDevelopment, isProduction, isTesting} from "~/env"
-import type {SendEmailCommandInput} from "@aws-sdk/client-ses"
+import type {Input as LambdaSesInput} from "lambda-ses"
 import Status from "~/statuses"
 import {apiURL} from "~/globals"
 import {daysToMs} from "@luke-zhang-04/dateplus/dist/cjs/dateplus.min.cjs"
 import db from "~/db"
 import {encodeAndSign} from "@luke-zhang-04/utils/cjs/node"
-import {ses} from "~/aws"
+import {lambdaSes} from "~/aws"
 
 const bodySchema = yup.object({
     idToken: yup.string().required(),
@@ -18,7 +18,7 @@ const bodySchema = yup.object({
  */
 const prepareAndSend = async (
     user: ThenArg<ReturnType<typeof getUser>>,
-): Promise<void | SendEmailCommandInput> => {
+): Promise<void | LambdaSesInput> => {
     // Three days in mv
     const timeToExpire = 259_200_000
 
@@ -40,35 +40,37 @@ const prepareAndSend = async (
     )}`
 
     // istanbul ignore next
-    const config: SendEmailCommandInput = {
-        Source: "talentmakergroup@gmail.com",
-        Destination: {
-            ToAddresses: isProduction
-                ? ["talentmakergroup@gmail.com"]
-                : ["luke_zhang_04@protonmail.com"],
-        },
-        Message: {
-            Body: {
-                Text: {
-                    Charset: "UTF-8",
-                    Data: `${isDevelopment ? "***THIS IS A TEST***\n" : ""}Verification for ${
-                        user.username
-                    }#${user.uid.slice(0, 8)}\n\nA user with the email "${
-                        user.email
-                    }", username "${user.username}", and id "${
-                        user.uid
-                    }" would like to be verified as an organization.\n\nThis user has${
-                        user.isVerified ? "" : " NOT"
-                    } verified their own email.\n\nMake sure you trust this user BEFORE you click the link. If you are unsure, DO NOT CLICK THE LINK. Organizations should be trustworthy and have extra privileges. \nTo verify ${
-                        user.username
-                    } as an organization, the following link: ${link}.\n\nThis link expires on ${new Date(
-                        Date.now() + timeToExpire,
-                    )}.`,
-                },
+    const config: LambdaSesInput = {
+        email: {
+            from: "talentmakergroup@gmail.com",
+            dest: {
+                to: isProduction
+                    ? ["talentmakergroup@gmail.com"]
+                    : ["luke_zhang_04@protonmail.com"],
             },
-            Subject: {
-                Charset: "UTF-8",
-                Data: `Confirm ${user.username} to be an organization.`,
+            content: {
+                body: {
+                    text: {
+                        charset: "UTF-8",
+                        data: `${isDevelopment ? "***THIS IS A TEST***\n" : ""}Verification for ${
+                            user.username
+                        }#${user.uid.slice(0, 8)}\n\nA user with the email "${
+                            user.email
+                        }", username "${user.username}", and id "${
+                            user.uid
+                        }" would like to be verified as an organization.\n\nThis user has${
+                            user.isVerified ? "" : " NOT"
+                        } verified their own email.\n\nMake sure you trust this user BEFORE you click the link. If you are unsure, DO NOT CLICK THE LINK. Organizations should be trustworthy and have extra privileges. \nTo verify ${
+                            user.username
+                        } as an organization, the following link: ${link}.\n\nThis link expires on ${new Date(
+                            Date.now() + timeToExpire,
+                        )}.`,
+                    },
+                },
+                subject: {
+                    charset: "UTF-8",
+                    data: `Confirm ${user.username} to be an organization.`,
+                },
             },
         },
     }
@@ -79,7 +81,7 @@ const prepareAndSend = async (
     }
 
     // istanbul ignore next
-    await ses.sendEmail(config)
+    await lambdaSes.send(config, {}, true)
 }
 
 /**
